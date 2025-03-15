@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "652369610091",
+    "project_id": "playhub-9cd5a",
+    "storage_bucket": "playhub-9cd5a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:652369610091:android:6c3117b2f78e33fd5d782e",
+        "android_client_info": {
+          "package_name": "com.example.game"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChifT4h6oYw35rRHvhd1asx5s94lVpEmc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
