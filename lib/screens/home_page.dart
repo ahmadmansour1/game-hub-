@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game/service/payment_service.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -137,8 +138,10 @@ class HomePage extends StatelessWidget {
                       trailing: ElevatedButton(
                         onPressed: center["isBusy"]
                             ? null // Disable button if busy
-                            : () {
-                          // Add booking functionality
+                            : () async {
+                       await PaymentManager.makePayment(10, "usd");
+
+
                         },
                         child: const Text("Book Now"),
                       ),

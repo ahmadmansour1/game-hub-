@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Flutter Plugins" type="FlutterPluginsLibraryType">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/stripe_android-11.4.0" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/firebase_core_web-2.21.1" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/firebase_core-3.12.1" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/stripe_ios-11.4.0" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_stripe-11.4.0" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

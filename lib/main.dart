@@ -1,10 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:game/screens/splash_screen.dart';
 
-import 'firebase_options.dart';
+import 'consts/api_keys.dart';
+import 'service/firebase_options.dart';
 
 void main() async {
+  Stripe.publishableKey=ApiKeys.publishedKey;
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
