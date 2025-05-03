@@ -42,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: _selectedIndex == 0
           ? FloatingActionButton(
         onPressed: () {
-          // Navigate to map view or show map modal
         },
         child: const Icon(Icons.map),
       )

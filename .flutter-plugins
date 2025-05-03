@@ -2,5 +2,13 @@
 firebase_core=/Users/ahmadmansour/.pub-cache/hosted/pub.dev/firebase_core-3.12.1/
 firebase_core_web=/Users/ahmadmansour/.pub-cache/hosted/pub.dev/firebase_core_web-2.21.1/
 flutter_stripe=/Users/ahmadmansour/.pub-cache/hosted/pub.dev/flutter_stripe-11.4.0/
+path_provider_linux=/Users/ahmadmansour/.pub-cache/hosted/pub.dev/path_provider_linux-2.2.1/
+path_provider_windows=/Users/ahmadmansour/.pub-cache/hosted/pub.dev/path_provider_windows-2.3.0/
+shared_preferences=/Users/ahmadmansour/.pub-cache/hosted/pub.dev/shared_preferences-2.5.3/
+shared_preferences_android=/Users/ahmadmansour/.pub-cache/hosted/pub.dev/shared_preferences_android-2.4.10/
+shared_preferences_foundation=/Users/ahmadmansour/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.5.4/
+shared_preferences_linux=/Users/ahmadmansour/.pub-cache/hosted/pub.dev/shared_preferences_linux-2.4.1/
+shared_preferences_web=/Users/ahmadmansour/.pub-cache/hosted/pub.dev/shared_preferences_web-2.4.3/
+shared_preferences_windows=/Users/ahmadmansour/.pub-cache/hosted/pub.dev/shared_preferences_windows-2.4.1/
 stripe_android=/Users/ahmadmansour/.pub-cache/hosted/pub.dev/stripe_android-11.4.0/
 stripe_ios=/Users/ahmadmansour/.pub-cache/hosted/pub.dev/stripe_ios-11.4.0/

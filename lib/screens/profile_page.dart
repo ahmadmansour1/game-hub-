@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:game/service/api_serveice.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -38,7 +41,10 @@ class ProfileScreen extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text("Logout"),
-              onTap: () {
+              onTap: () async {
+                 await ApiService.clearToken();
+                Get.offAllNamed('/login');
+
                 // Handle logout logic
               },
             ),
