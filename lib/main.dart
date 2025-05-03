@@ -34,21 +34,29 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/register', page: () => RegisterPage(), binding: AuthBinding()),
       ],
       theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
-          appBarTheme: AppBarTheme(
-            elevation: 4.0,
-            centerTitle: true,
-            titleTextStyle: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-            iconTheme: IconThemeData(
-              color: Colors.white,
-              size: 24,
-            ),
+
+        primarySwatch: Colors.indigo,
+        scaffoldBackgroundColor: Colors.grey[100],
+        textTheme: const TextTheme(
+          headlineMedium: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.indigo),
+          bodyMedium: TextStyle(fontSize: 16),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey),
           ),
-          useMaterial3: false
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.indigo,
+            foregroundColor: Colors.white,
+            padding: EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
       ),
       initialBinding: AuthBinding(),
       home: SplashScreen(),
