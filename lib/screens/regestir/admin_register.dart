@@ -32,48 +32,126 @@ class _RegisterAdminPageState extends State<RegisterAdminPage> {
     final authController = Get.find<AuthController>();
 
     return Scaffold(
-      appBar: AppBar(title: Text('Register Admin')),
+      appBar: AppBar(
+        title: const Text('Register Admin'),
+        centerTitle: true,
+      ),
       body: Obx(() {
-        return authController.isLoading.value
-            ? Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-          padding: EdgeInsets.all(20),
-          child: Column(
+        if (authController.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
             children: [
+              const Text(
+                'Admin Info',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
               TextField(
                 controller: usernameController,
-                decoration: InputDecoration(labelText: 'Username'),
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                  prefixIcon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                ),
               ),
+              const SizedBox(height: 12),
               TextField(
                 controller: passwordController,
-                decoration: InputDecoration(labelText: 'Password'),
                 obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  prefixIcon: Icon(Icons.lock),
+                  border: OutlineInputBorder(),
+                ),
               ),
-              SizedBox(height: 20),
-              Text('Game Center Details', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextField(
-                controller: gameCenterNameController,
-                decoration: InputDecoration(labelText: 'Game Center Name'),
+              const SizedBox(height: 24),
+
+              const Text(
+                'Game Center Details',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              TextField(
-                controller: numberOfRoomsController,
-                decoration: InputDecoration(labelText: 'Number of Rooms'),
-                keyboardType: TextInputType.number,
+              const SizedBox(height: 12),
+
+              Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: gameCenterNameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Game Center Name',
+                          prefixIcon: Icon(Icons.videogame_asset),
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: numberOfRoomsController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Number of Rooms',
+                          prefixIcon: Icon(Icons.meeting_room),
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Room Prices (per hour):",
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 8),
+                          ...List.generate(priceControllers.length, (index) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4.0),
+                              child: TextField(
+                                controller: priceControllers[index],
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'Room ${index + 1} Price',
+                                  prefixIcon: const Icon(Icons.attach_money),
+                                  border: const OutlineInputBorder(),
+                                ),
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: locationController,
+                        decoration: const InputDecoration(
+                          labelText: 'Location',
+                          prefixIcon: Icon(Icons.location_on),
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              SizedBox(height: 10),
-              ...List.generate(priceControllers.length, (index) {
-                return TextField(
-                  controller: priceControllers[index],
-                  decoration: InputDecoration(labelText: 'Price/hour for Room ${index + 1}'),
-                  keyboardType: TextInputType.number,
-                );
-              }),
-              TextField(
-                controller: locationController,
-                decoration: InputDecoration(labelText: 'Location'),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
+
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                label: const Text(
+                  'Register Admin',
+                  style: TextStyle(fontSize: 16),
+                ),
                 onPressed: () {
                   final prices = List.generate(priceControllers.length, (index) {
                     return Prices(
@@ -96,12 +174,12 @@ class _RegisterAdminPageState extends State<RegisterAdminPage> {
                     gameCenter: gameCenter,
                   );
                 },
-                child: Text('Register Admin'),
-              ),
+              )
             ],
           ),
         );
       }),
     );
   }
+
 }
