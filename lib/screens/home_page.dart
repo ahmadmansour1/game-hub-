@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final List<Widget> _pages = [
-    const GameCenterPage(),
+     GameCenterPage(),
     MockMapScreen(), // Placeholder
     const ProfileScreen(),
   ];

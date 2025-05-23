@@ -26,9 +26,9 @@ class RegisterPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   authController.register(
-                    usernameController.text.trim(),
-                    passwordController.text.trim(),
-                  );
+                   username:  usernameController.text.trim(),
+                  password:   passwordController.text.trim(),
+                   isAdmin: false);
                 },
                 child: Text('Register'),
               ),

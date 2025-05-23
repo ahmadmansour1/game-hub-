@@ -1,39 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:game/screens/profile_page.dart';
-import 'package:game/screens/widgets/custome_nav_bar.dart';
+import 'package:get/get.dart';
+import 'package:game/controllers/game_center_controller.dart';
+import 'package:game/data/game_center.dart';
 import 'package:game/service/payment_service.dart';
 
 class GameCenterPage extends StatefulWidget {
-  const GameCenterPage({super.key});
+  GameCenterPage({Key? key}) : super(key: key);
 
   @override
-  State<GameCenterPage> createState() => _HomePageState();
+  State<GameCenterPage> createState() => _GameCenterPageState();
 }
 
-class _HomePageState extends State<GameCenterPage> {
-  final List<Map<String, dynamic>> mockCenters = const [
-    {
-      "name": "Galaxy Game Center",
-      "distance": "1.2 km",
-      "rating": 4.5,
-      "isBusy": false,
-      "availableRooms": 3,
-    },
-    {
-      "name": "Epic Play Arena",
-      "distance": "2.4 km",
-      "rating": 4.8,
-      "isBusy": true,
-      "availableRooms": 0,
-    },
-    {
-      "name": "Next Level Hub",
-      "distance": "3.1 km",
-      "rating": 4.2,
-      "isBusy": false,
-      "availableRooms": 5,
-    },
-  ];
+class _GameCenterPageState extends State<GameCenterPage> {
+  final GameCenterController controller = Get.put(GameCenterController());
+
+  // Search query as an observable string
+  final RxString searchQuery = "".obs;
+
+  // Filtered list depending on search query
+  List<GameCenters> get filteredGameCenters {
+    if (searchQuery.value.isEmpty) return controller.gameCenters;
+    return controller.gameCenters
+        .where((center) =>
+        center.name!.toLowerCase().contains(searchQuery.value.toLowerCase()))
+        .toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller.fetchGameCenters();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,35 +45,42 @@ class _HomePageState extends State<GameCenterPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Location & Profile
+                  // Location & Profile Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Welcome, Ahmad!",
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: const [
-                              Icon(Icons.location_on, color: Colors.red),
-                              SizedBox(width: 4),
-                              Text(
-                                "Near: Downtown",
-                                style: TextStyle(fontSize: 14, color: Colors.grey),
+                      Obx(() {
+                        final nearLocation = controller.gameCenters.isNotEmpty
+                            ? controller.gameCenters.first.location
+                            : "Downtown";
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Welcome, Ahmad!",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      // Profile Icon
-                      CircleAvatar(
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                const Icon(Icons.location_on, color: Colors.red),
+                                const SizedBox(width: 4),
+                                Text(
+                                  "Near: $nearLocation",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      }),
+                      const CircleAvatar(
                         radius: 24,
                         backgroundImage: AssetImage('assets/profile.jpg'),
                       ),
@@ -83,7 +88,7 @@ class _HomePageState extends State<GameCenterPage> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Search Bar
+                  // Search Bar (no Obx here, reacts via onChanged)
                   TextField(
                     decoration: InputDecoration(
                       hintText: "Search for game centers...",
@@ -95,6 +100,7 @@ class _HomePageState extends State<GameCenterPage> {
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    onChanged: (val) => searchQuery.value = val,
                   ),
                 ],
               ),
@@ -102,70 +108,79 @@ class _HomePageState extends State<GameCenterPage> {
 
             const SizedBox(height: 10),
 
-            // Game Center List
+            // Game Center List or Loading Indicator
             Expanded(
-              child: ListView.builder(
-                itemCount: mockCenters.length,
-                itemBuilder: (context, index) {
-                  final center = mockCenters[index];
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-                  return Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 4,
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(16),
-                      title: Text(
-                        center["name"],
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                final filteredList = filteredGameCenters;
+
+                if (filteredList.isEmpty) {
+                  return const Center(child: Text("No game centers found."));
+                }
+
+                return ListView.builder(
+                  itemCount: filteredList.length,
+                  itemBuilder: (context, index) {
+                    final center = filteredList[index];
+
+                    final pricePerHour = center.prices!.isNotEmpty
+                        ? center.prices!.first.pricePerHour
+                        : 0;
+
+                    return Card(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${center["distance"]} • ⭐ ${center["rating"]}",
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                          const SizedBox(height: 8),
-                          if (center["isBusy"])
-                            const Text(
-                              "🚫 Busy",
-                              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-                            )
-                          else
+                      elevation: 4,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(16),
+                        title: Text(
+                          center.name!,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Text(
-                              "✅ Rooms Left: ${center["availableRooms"]}",
-                              style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                              center.location!,
+                              style: const TextStyle(color: Colors.grey),
                             ),
-                        ],
+                            const SizedBox(height: 8),
+                            Text(
+                              "Rooms: ${center.numberOfRooms} • Price/hr: \$${pricePerHour.toString()}",
+                              style: const TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        trailing: ElevatedButton(
+                          onPressed: () async {
+                            await PaymentManager.makePayment(pricePerHour!, "usd");
+                          },
+                          child: const Text("Book Now"),
+                        ),
                       ),
-                      trailing: ElevatedButton(
-                        onPressed: center["isBusy"]
-                            ? null // Disable button if busy
-                            : () async {
-                          await PaymentManager.makePayment(10, "usd");
-
-
-                        },
-                        child: const Text("Book Now"),
-                      ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                );
+              }),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigate to map view
+          // TODO: Navigate to map view
         },
         child: const Icon(Icons.map),
       ),
     );
   }
 }
-
