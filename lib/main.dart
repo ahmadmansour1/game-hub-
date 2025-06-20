@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/register', page: () => RegisterPage(), binding: AuthBinding()),
       ],
       theme: ThemeData(
+        useMaterial3: false,
 
         primarySwatch: Colors.indigo,
         scaffoldBackgroundColor: Colors.grey[100],

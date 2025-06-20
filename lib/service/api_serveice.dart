@@ -1,4 +1,5 @@
 // lib/services/api_service.dart
+import 'package:game/data/booking.dart';
 import 'package:game/data/game_center.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,7 +43,7 @@ class ApiService {
       'body': jsonDecode(response.body),
     };
   }
-  static Future<Map<String, dynamic>> loginUser(String username, String password) async {
+  static Future<Map<String, dynamic>> loginUser(String username, String password  ) async {
     final url = Uri.parse('${ApiKeys.baseUrl}${ApiKeys.loginEndpoint}');
     final response = await http.post(
       url,
@@ -76,6 +77,36 @@ class ApiService {
       print('Failed to fetch game centers: ${response.body}');
       return null;
     }
+  }
+  static Future<List<BookingModel>> getBookings() async {
+    final url = Uri.parse('http://10.0.2.2:3000/api/bookings/game-center'); // use 10.0.2.2 for Android emulator
+
+    final response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${await getToken() ?? ''}',
+    });
+
+    if (response.statusCode == 200) {
+      final List data = jsonDecode(response.body);
+      return data.map((json) => BookingModel.fromJson(json)).toList();
+    } else {
+      print('Failed to fetch bookings: ${response.body}');
+      return [];
+    }
+  }
+  static Future<bool> updateBookingStatus(String bookingId, String status) async {
+    final url = Uri.parse('http://10.0.2.2:3000/api/bookings/$bookingId/status');
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${await getToken() ?? ''}',
+      },
+      body: jsonEncode({"status": status}),
+    );
+
+    return response.statusCode == 200;
   }
   // Save token to SharedPreferences
   static Future<void> saveToken(String token) async {

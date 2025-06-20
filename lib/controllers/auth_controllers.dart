@@ -1,5 +1,3 @@
-// lib/controllers/auth_controller.dart
-import 'dart:convert';
 
 import 'package:game/data/game_center.dart';
 import 'package:game/data/user.dart';
@@ -51,14 +49,14 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> login(String username, String password) async {
+  Future<void> login(String username, String password , bool isAdmin) async {
     isLoading.value = true;
     final response = await ApiService.loginUser(username, password);
 
     if (response['statusCode'] == 200) {
       // Assuming the login API returns user info including admin flag
       final body = response['body'];
-      final bool isAdmin = body['admin'] ?? false;
+      // final bool isAdmin = body['admin'] ?? false;
 
       if (isAdmin) {
         Get.offAll(() => AdminHomePage());

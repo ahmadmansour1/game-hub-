@@ -1,3 +1,4 @@
+import 'package:game/data/booking.dart';
 import 'package:game/data/game_center.dart';
 import 'package:game/service/api_serveice.dart';
 import 'package:get/get.dart';
@@ -23,4 +24,6 @@ class GameCenterController extends GetxController {
       isLoading.value = false;
     }
   }
+
+
 }

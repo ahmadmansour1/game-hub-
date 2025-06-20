@@ -125,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () {
                               final username = usernameController.text.trim();
                               final password = passwordController.text.trim();
-                              authController.login(username, password);
+                              authController.login(username, password , isAdmin);
                             },
                             child: const Text('Login'),
                           ),
