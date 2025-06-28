@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'admin_home_page.dart';
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -19,15 +21,19 @@ class _SplashScreenState extends State<SplashScreen> {
   void checkAuthStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
-
+    final bool? isAdmin = prefs.getBool("isAdmin");
     await Future.delayed(Duration(seconds: 2));
 
     if (token != null && token.isNotEmpty) {
-      Get.offAllNamed('/home'); // Token exists, go to Home
-    } else {
+      if(isAdmin != null){
+        isAdmin ? Get.offAll(() => AdminHomePage()) :   Get.offAllNamed('/home');
+
+      } else {
+        Get.offAllNamed('/login');
+      }
+  }  else {
       Get.offAllNamed('/login'); // No token, go to Login/Register
-    }
-  }
+    }}
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -5,7 +5,6 @@ import 'package:game/screens/admin_home_page.dart';  // Import AdminHomePage scr
 import 'package:game/screens/home_page.dart';
 import 'package:game/service/api_serveice.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
   var isLoading = false.obs;
@@ -33,10 +32,8 @@ class AuthController extends GetxController {
         Get.snackbar('Success', 'Registered successfully');
 
         if (isAdmin) {
-          // Navigate to admin home page
           Get.offAll(() => AdminHomePage());
         } else {
-          // Navigate to regular home page
           Get.offAllNamed('/home');
         }
       } else {
@@ -51,12 +48,10 @@ class AuthController extends GetxController {
 
   Future<void> login(String username, String password , bool isAdmin) async {
     isLoading.value = true;
-    final response = await ApiService.loginUser(username, password);
+    final response = await ApiService.loginUser(username, password, isAdmin);
 
     if (response['statusCode'] == 200) {
-      // Assuming the login API returns user info including admin flag
-      final body = response['body'];
-      // final bool isAdmin = body['admin'] ?? false;
+
 
       if (isAdmin) {
         Get.offAll(() => AdminHomePage());

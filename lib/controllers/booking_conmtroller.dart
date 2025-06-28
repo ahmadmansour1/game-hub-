@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:game/data/booking.dart';
 import 'package:game/service/api_serveice.dart';
 import 'package:get/get.dart';
@@ -30,4 +32,33 @@ class BookingController extends GetxController {
       Get.snackbar('Error', 'Failed to update status', snackPosition: SnackPosition.BOTTOM);
     }
   }
+  Future<bool> createBooking({
+    required String userId,
+    required String gameCenterId,
+    required int roomNumber,
+    required String date,       // 'YYYY-MM-DD'
+    required String startTime,  // 'HH:mm'
+    required String endTime,    // 'HH:mm'
+    required double price,
+  }) async {
+    try {
+      isLoading.value = true;
+
+      final success = await ApiService.createBooking(
+        userId: userId,
+        gameCenterId: gameCenterId,
+        roomNumber: roomNumber,
+        date: date,
+        startTime: startTime,
+        endTime: endTime,
+        price: price,
+      );
+
+
+      return success;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
 }

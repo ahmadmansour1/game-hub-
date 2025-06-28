@@ -35,7 +35,6 @@ class ProfileScreen extends StatelessWidget {
               leading: const Icon(Icons.settings),
               title: const Text("Settings"),
               onTap: () {
-                // Handle settings tap
               },
             ),
             ListTile(

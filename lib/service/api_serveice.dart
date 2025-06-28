@@ -43,7 +43,7 @@ class ApiService {
       'body': jsonDecode(response.body),
     };
   }
-  static Future<Map<String, dynamic>> loginUser(String username, String password  ) async {
+  static Future<Map<String, dynamic>> loginUser(String username, String password , bool isAdmin   ) async {
     final url = Uri.parse('${ApiKeys.baseUrl}${ApiKeys.loginEndpoint}');
     final response = await http.post(
       url,
@@ -54,7 +54,9 @@ class ApiService {
     final responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200 && responseBody['token'] != null) {
-      await saveToken(responseBody['token']);
+
+      await saveToken(responseBody['token'] , isAdmin);
+
     }
 
     return {
@@ -79,16 +81,21 @@ class ApiService {
     }
   }
   static Future<List<BookingModel>> getBookings() async {
-    final url = Uri.parse('http://10.0.2.2:3000/api/bookings/game-center'); // use 10.0.2.2 for Android emulator
+    final url = Uri.parse('http://10.0.2.2:3000/api/bookings/game-center');
 
-    final response = await http.get(url, headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${await getToken() ?? ''}',
-    });
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${await getToken() ?? ''}',
+      },
+    );
 
     if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
-      return data.map((json) => BookingModel.fromJson(json)).toList();
+      final Map<String, dynamic> json = jsonDecode(response.body);
+      final List<dynamic> bookingsJson = json['bookings'];
+
+      return bookingsJson.map((b) => BookingModel.fromJson(b)).toList();
     } else {
       print('Failed to fetch bookings: ${response.body}');
       return [];
@@ -108,10 +115,43 @@ class ApiService {
 
     return response.statusCode == 200;
   }
+ static  Future<bool> createBooking({
+    required String userId,
+    required String gameCenterId,
+    required int roomNumber,
+    required String startTime,
+    required String endTime,
+    required double price,
+    required String date,
+  }) async {
+    final url = Uri.parse('http://your-server-url/api/bookings/createBookings');
+
+    final response = await http.post(url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'user': userId,
+          'gameCenter': gameCenterId,
+          'roomNumber': roomNumber,
+          'startTime': startTime,
+          'endTime': endTime,
+          'price': price,
+          'date': date,
+          'status': 'paid', // since payment succeeded
+        }));
+
+    if (response.statusCode == 201) {
+      return true; // success
+    } else {
+      print('Booking creation failed: ${response.body}');
+      return false;
+    }
+  }
   // Save token to SharedPreferences
-  static Future<void> saveToken(String token) async {
+  static Future<void> saveToken(String token , bool isAdmin) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('auth_token', token);
+    await prefs.setBool('isAdmin', isAdmin);
+
   }
 
   // Get token from SharedPreferences
