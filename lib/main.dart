@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: false,
 
         primarySwatch: Colors.indigo,
-        scaffoldBackgroundColor: Colors.grey[100],
+        scaffoldBackgroundColor: Colors.grey[200],
         textTheme: const TextTheme(
           headlineMedium: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.indigo),
           bodyMedium: TextStyle(fontSize: 16),
